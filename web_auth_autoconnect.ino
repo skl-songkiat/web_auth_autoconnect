@@ -5,12 +5,9 @@
 #include <DNSServer.h>
 #include <FS.h>
 
-DNSServer dnsServer;
 BearSSL::ESP8266WebServerSecure server(443);
 
-#define DNS_PORT    53
-#define AP_IP       192,168,4,1
-#define DBG_OUTPUT_PORT Serial
+//SSL Self-Sign Certificate SKLSongkiat Developement
 
 static const char  serverCert[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
@@ -74,14 +71,9 @@ void setup() {
    Serial.begin(115200);
 
    WiFiManager wifiManager;
-   IPAddress ip(AP_IP);
-  
    wifiManager.autoConnect("AutoConnectAP");
    Serial.println("Connected.");
-   WiFi.softAP("nodemcu_sklsongkiat");
-   dnsServer.setErrorReplyCode(DNSReplyCode::NoError);
-   dnsServer.start(DNS_PORT, "*", ip); 
-    
+   
    // Makes SSL
    server.setRSACert(new X509List(serverCert), new PrivateKey(serverKey));
 
@@ -95,7 +87,6 @@ void setup() {
 
 void loop() {
   server.handleClient();
-  dnsServer.processNextRequest();
 }
 
 void handleRoot(){
