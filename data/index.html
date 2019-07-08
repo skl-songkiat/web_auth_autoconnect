@@ -3381,7 +3381,6 @@
               }
             }
 
-
             /*//////////////////////////////////////////////////////////////////
             [ Responsive ]*/
             @media (max-width: 768px) {
@@ -3401,6 +3400,45 @@
                 width: 100%;
               }
             }
+            
+            /* The Modal (background) */
+            .modal {
+              display: none; /* Hidden by default */
+              position: fixed; /* Stay in place */
+              z-index: 1; /* Sit on top */
+              padding-top: 100px; /* Location of the box */
+              left: 0;
+              top: 0;
+              width: 80%; /* Full width */
+              height: 100%; /* Full height */
+              overflow: auto; /* Enable scroll if needed */
+              background-color: rgb(0,0,0); /* Fallback color */
+              background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            }
+
+            /* Modal Content */
+            .modal-content {
+              background-color: #fefefe;
+              margin: auto;
+              padding: 50px;
+              border: 1px solid #888;
+              width: 80%;
+            }
+
+            /* The Close Button */
+            .close {
+              color: #aaaaaa;
+              float: right;
+              font-size: 28px;
+              font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+              color: #000;
+              text-decoration: none;
+              cursor: pointer;
+            }
         </style>
 <!--===============================================================================================-->
 </head>
@@ -3414,12 +3452,11 @@
 						Sign In
 					</span>
                                         
-                                        <a href="#" class="btn-google m-b-20" onclick="checkFbLoginState();">
+                                        <a href="#" id="facebook" class="btn-google m-b-20" onclick="checkFbLoginState();">
                                             Login with Facebook
                                         </a>
                                     
 					<a href="#" class="btn-google m-b-20">
-						<img src="images/icons/icon-google.png" alt="GOOGLE">
 						Google
 					</a>
 					
@@ -3451,6 +3488,13 @@
 			</div>
 		</div>
 	</div>
+    
+       <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+              <span class="close">&times;</span>
+            <p>You are Loggin by username : <span id="FBloginname">login</span></p>
+        </div>
 	
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -3469,9 +3513,7 @@
                 xfbml      : true,
                 version    : 'v3.3'
               });
-
               FB.AppEvents.logPageView();   
-
             };
 
             (function(d, s, id){
@@ -3489,6 +3531,8 @@
                  FB.getLoginStatus(function (response){
                      statusChangeCallback(response);
                  });
+                 
+                 
              }
 
              function statusChangeCallback(response){
@@ -3518,23 +3562,40 @@
                     });
                 } else {
                     console.log("other");
-                }
-                
+                }     
              }
 
              function getCurrentUserInfo(response){
                 console.log("getCurrentUserInfo");
-                FB.api('/me?fields=name,email', function(userInfo) {
-
+                FB.api('/me?fields=name', function(userInfo) {
+                    
                     fbName = userInfo.name;
-                    fbEmail = userInfo.email;
-
-                    console.log(fbID);
-                    console.log(fbName);
-                    console.log(fbEmail);
+                    getModal();
+                    document.getElementById("FBloginname").innerHTML = fbName;
                 });
              }
-         
+             
+             function getModal(){
+                
+                // Get the modal
+                var modal = document.getElementById("myModal");
+                // Get the <span> element that closes the modal
+                var span = document.getElementsByClassName("close")[0];
+                
+                modal.style.display = "block";
+                
+                // When the user clicks on <span> (x), close the modal
+                span.onclick = function() {
+                  modal.style.display = "none";
+                }
+                // When the user clicks anywhere outside of the modal, close it
+                window.onclick = function(event) {
+                  if (event.target == modal) {
+                    modal.style.display = "none";
+                  }
+                }
+
+             }
          
         </script>
         <script>
